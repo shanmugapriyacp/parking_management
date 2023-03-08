@@ -64,23 +64,6 @@ class FeeComputationManager:
                     flat_result += result['fee'].values[0] * mul_val
                 elif result['fee_type'].values[0] == INTERVAL:
                     flat_result += result['fee'].values[0]
-
-
-            # if result['fee_sum_type'].values[0] == SUM_UP:
-            #     sumup_result = self.__fee_data.loc[
-            #         (self.__fee_data['vehicle_type'] == vehicle_type) & (self.__fee_data['time_unit'] == time_unit) & (
-            #                 self.__fee_data['end_value'] <= parked_time), 'fee'].sum()
-            #     # sumup_result = self.__fee_data.loc[(self.__fee_data['vehicle_type'] == vehicle_type) & (self.__fee_data['time_unit'] == time_unit) & (
-            #     #     (self.__fee_data['end_value'] <= parked_time) or (self.__fee_data['start_value'] == parked_time)), 'fee'].sum()
-            # if result['fee_type'].values[0] == PER_UNIT:
-            #     mul_val = parked_time - result['start_value']
-            #     if result['close_value'].values[0] == LEFT and result['start_value'].values[0] > 0:
-            #         mul_val += 1
-            #     mul_val = math.ceil(mul_val)
-            #     multiplied_result = result['fee'].values[0] * mul_val
-            # elif result['fee_type'].values[0] == INTERVAL:
-            #     interval_result = result['fee'].values[0]
-
             final_result = sumup_result + flat_result
             return final_result and final_result or result['fee'].values[0]
         except Exception as e:
