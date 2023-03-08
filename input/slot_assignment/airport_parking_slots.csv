@@ -1,0 +1,4 @@
+vehicle_type,slots,occupied_slots
+motor_cycle,200,199
+car_suv,500,499
+bus_truck,100,100

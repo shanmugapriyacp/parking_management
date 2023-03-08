@@ -1,0 +1,4 @@
+﻿vehicle_type,time_unit,start_value,end_value,close_value,fee_type,fee,fee_sum_type
+motor_cycle,hour,0,999999,left,per_unit,10,sum_up
+car_suv,hour,0,999999,left,per_unit,20,sum_up
+bus_truck,hour,0,999999,left,per_unit,50,sum_up

@@ -1,0 +1,8 @@
+﻿vehicle_type,time_unit,start_value,end_value,close_value,fee_type,fee,fee_sum_type
+motor_cycle,hour,0,1,left,interval,0,flat
+motor_cycle,hour,1,8,left,interval,40,flat
+motor_cycle,hour,8,24,left,interval,60,flat
+motor_cycle,day,1,999999,left,per_unit,80,flat
+car_suv,hour,0,12,left,interval,60,flat
+car_suv,hour,12,24,left,interval,80,flat
+car_suv,day,1,999999,left,per_unit,100,flat
