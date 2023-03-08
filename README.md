@@ -2,8 +2,8 @@
 parking_management
 
 ## Execution steps
-The Project was built and executed in Pycharm IDE
-Please install the required Packages in requirements.txt in pycharm or any other platform of your choice
+The Project was built and executed in Pycharm IDE, For data storing I have used csv files which can be replaced by database for large infrastructure.
+Please install the required Packages in requirements.txt in pycharm or any other platform of your choice.
 The Main File is parking_manager.py which can be executed to park a vehicle or unpark a vehicle
 ## Few execution samples
 C:\Users\shanmugapriya.palani\PycharmProjects\pythonProject\parking_management>python parking_manager.py
