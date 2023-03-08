@@ -15,8 +15,6 @@ class SlotManager:
         self.ticket_file = TICKET_FILE_MAP[parked_venue]
         self.slot_details = pd.read_csv(self.slot_file)
         self.ticket_details = pd.read_csv(self.ticket_file)
-        print(self.slot_details.to_dict())
-        print(self.ticket_details.to_dict())
 
     def __is_slot_available(self, vehicle_type):
         try:
@@ -43,6 +41,7 @@ class SlotManager:
 
     def assign_slot(self, vehicle_type):
         try:
+            print("Assigning slot for vehicle: ", vehicle_type)
             validictory.validate(vehicle_type, VEHICLE_TYPE_VALIDATION)
             if self.__is_slot_available(vehicle_type):
                 return self.__get_ticket(vehicle_type)
@@ -62,7 +61,7 @@ class SlotManager:
 
     def release_slot(self, ticket_number):
         try:
-            print("Releasing slot for ", ticket_number)
+            print("Releasing slot for ticket: ", ticket_number)
             validictory.validate(ticket_number, TICKET_NUMBER_VALIDATION)
             ticket = self.ticket_details[self.ticket_details['ticket_number'] == ticket_number]
             self.__validate_ticket(ticket)
