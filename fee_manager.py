@@ -16,6 +16,38 @@ class FeeComputationManager:
     def __validate_input(self, parking_data):
         validictory.validate(parking_data, PARKING_DATA_SCHEMA)
 
+    def __sumup_fee(self, result, res, parked_time):
+        sumup_result = 0
+        if result['fee_sum_type'].values[0] == SUM_UP:
+            records = res[(res['end_value'] <= parked_time) |
+                          ((res['start_value'] <= parked_time) & (res['end_value'] >= parked_time))]
+            for indx, rec in records.iterrows():
+                if rec['fee_type'] == PER_UNIT:
+                    slot_val = min(parked_time, rec['end_value'])
+                    mul_val = slot_val - rec['start_value']
+                    if result['close_value'].values[0] == LEFT and result['start_value'].values[0] > 0:
+                        mul_val = math.floor(mul_val)
+                        mul_val += 1
+                    else:
+                        mul_val = math.ceil(mul_val)
+
+                    sumup_result += rec['fee'] * mul_val
+                elif rec['fee_type'] == INTERVAL:
+                    sumup_result += rec['fee']
+        return sumup_result
+
+    def __flat_fee(self, result, parked_time):
+        flat_result = 0
+        if result['fee_sum_type'].values[0] == FLAT:
+            if result['fee_type'].values[0] == PER_UNIT:
+                mul_val = math.floor(parked_time - result['start_value'])
+                if result['close_value'].values[0] == LEFT and result['start_value'].values[0] > 0:
+                    mul_val += 1
+                flat_result += result['fee'].values[0] * mul_val
+            elif result['fee_type'].values[0] == INTERVAL:
+                flat_result += result['fee'].values[0]
+        return flat_result
+
     def calculate(self, parking_data):
         try:
             self.__validate_input(parking_data)
@@ -36,34 +68,8 @@ class FeeComputationManager:
                 result = res[(res['start_value'] <= parked_time) & (res['end_value'] >= parked_time)]
             if result.empty:
                 raise Exception("No fee detail availabe for the given time slot")
-
-            sumup_result = 0
-            flat_result = 0
-
-            if result['fee_sum_type'].values[0] == SUM_UP:
-                records = res[(res['end_value'] <= parked_time) |
-                              ((res['start_value'] <= parked_time) & (res['end_value'] >= parked_time))]
-                for indx, rec in records.iterrows():
-                    if rec['fee_type'] == PER_UNIT:
-                        slot_val = min(parked_time, rec['end_value'])
-                        mul_val = slot_val - rec['start_value']
-                        if result['close_value'].values[0] == LEFT and result['start_value'].values[0] > 0:
-                            mul_val = math.floor(mul_val)
-                            mul_val += 1
-                        else:
-                            mul_val = math.ceil(mul_val)
-
-                        sumup_result += rec['fee'] * mul_val
-                    elif rec['fee_type'] == INTERVAL:
-                        sumup_result += rec['fee']
-            elif result['fee_sum_type'].values[0] == FLAT:
-                if result['fee_type'].values[0] == PER_UNIT:
-                    mul_val = math.floor(parked_time - result['start_value'])
-                    if result['close_value'].values[0] == LEFT and result['start_value'].values[0] > 0:
-                        mul_val += 1
-                    flat_result += result['fee'].values[0] * mul_val
-                elif result['fee_type'].values[0] == INTERVAL:
-                    flat_result += result['fee'].values[0]
+            sumup_result = self.__sumup_fee(result, res, parked_time)
+            flat_result = self.__flat_fee(result, parked_time)
             final_result = sumup_result + flat_result
             return final_result and final_result or result['fee'].values[0]
         except Exception as e:
