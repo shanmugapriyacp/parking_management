@@ -1,5 +1,6 @@
 # parking_management
 parking_management
+Built and executed in Python Version 3.8.5
 
 ## Execution steps
 The Project was built and executed in Pycharm IDE, For data storing I have used csv files which can be replaced by database for large infrastructure.
